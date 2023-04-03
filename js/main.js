@@ -113,7 +113,7 @@ domReady(() => {
 function startMic() {
   let canvas = document.getElementById("oscilloscope");
   let canvasCtx = canvas.getContext("2d");
-  let oscilloscopeColor = "#2196F3";
+  let oscilloscopeColor = "#ff71ce";
 
   navigator.mediaDevices.getUserMedia({audio: true})
     .then(function (stream) {
@@ -189,7 +189,7 @@ function drawLines() {
   for (let i = 0; i < getHeight() / 10; i++) {
     const line = document.createElement("div");
     line.className = `line line-${i}`;
-    line.style.top = `${i * 10}px`;
+    line.style.top = `${i * randomIntFromInterval(3, 15)}px`;
     const time = Math.random() * 5;
     line.style.animation = `lines ${time}s infinite`;
     document.body.appendChild(line);
