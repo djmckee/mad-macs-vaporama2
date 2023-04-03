@@ -23,12 +23,8 @@ let tweets = [];
 let drawingTimer = null;
 
 let colours = [
-  "#ff0000",
-  "#ffff00",
-  "#2196F3",
-  "#0000ff",
-  "#ff00ff",
-  "#0f0",
+  "#9600ff",
+  "#26ff4e",
 ];
 
 let counter = 0;
@@ -121,6 +117,17 @@ function startMic() {
 
   navigator.mediaDevices.getUserMedia({audio: true})
     .then(function (stream) {
+
+      let elem = document.documentElement;
+      elem
+        .requestFullscreen({ navigationUI: "hide" })
+        .then(() => {})
+        .catch((err) => {
+          console.log(
+            `An error occurred while trying to switch into fullscreen mode: ${err.message} (${err.name})`
+          );
+        });
+
       const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
       const analyser = audioCtx.createAnalyser();
       const microphone = audioCtx.createMediaStreamSource(stream);
@@ -137,18 +144,21 @@ function startMic() {
         canvasCtx.lineWidth = 2;
         canvasCtx.strokeStyle = oscilloscopeColor;
         canvasCtx.beginPath();
-        let sliceWidth = canvas.width * 1.0 / bufferLength;
-        let x = 0;
-        for (let i = 0; i < bufferLength; i++) {
+        var sliceWidth = canvas.width * 1.0 / bufferLength;
+        var x = 0;
+        for (var i = 0; i < bufferLength; i++) {
           //bufferLength is frequency control
-          let v = dataArray[i] / 128.0;
-          const y = v * canvas.height / 2;
+          var v = dataArray[i] / 128.0;
+          var y = v * canvas.height;
           if (i === 0) {
             canvasCtx.moveTo(x, y);
           } else {
             canvasCtx.lineTo(x, y);
           }
           x += sliceWidth;
+          console.log('drawSillyScope x: ' + x);
+          console.log('drawSillyScope y: ' + y);
+
         }
         canvasCtx.lineTo(canvas.width, canvas.height / 2);
         canvasCtx.stroke();
@@ -190,6 +200,10 @@ window.onresize = function (event) {
   drawLines();
 };
 
+function randomIntFromInterval(min, max) { // min and max included
+  return Math.floor(Math.random() * (max - min + 1) + min)
+}
+
 // Setting up the draw function
 function draw() {
   counter++;
@@ -199,7 +213,7 @@ function draw() {
     let text = letters[Math.floor(Math.random() * letters.length)];
     ctx.fillStyle = colours[Math.floor(Math.random() * colours.length)];
     ctx.font = "bold 48px VCR OSD";
-    ctx.globalAlpha = 0.3;
+    ctx.globalAlpha = (randomIntFromInterval(30, 60) / 100.0);
 
     ctx.fillText(text, i * fontSize, drops[i] * fontSize);
     drops[i]++;
@@ -207,7 +221,7 @@ function draw() {
       drops[i] = 0;
     }
   }
-  if (counter > 200) {
+  if (counter > randomIntFromInterval(150, 250)) {
     clearInterval(drawingTimer);
     ctx.clearRect(0, 0, canvas.width, canvas.height);
   }

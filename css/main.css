@@ -297,7 +297,7 @@ body {
 #text {
   top: 20px;
   left: 26px;
-  color: red;
+  color: white;
   mix-blend-mode: screen;
   position: absolute;
   -webkit-filter: blur(1px);
@@ -317,7 +317,7 @@ body {
 #text:after {
   top: 0;
   left: 5px;
-  color: blue;
+  color: black;
   -webkit-animation: move 1.5s infinite;
   -moz-animation: move 1.5s infinite;
   -o-animation: move 1.5s infinite;
